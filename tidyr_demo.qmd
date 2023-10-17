@@ -1,0 +1,47 @@
+---
+title: "tidyr"
+author: "Yuntong Wu"
+format: html
+editor: visual
+---
+
+## Tidyr and gglot2
+
+```{r}
+here::i_am("gita.Rproj")
+library(here)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+```
+
+### Multiple lines on a single graph
+
+```{r}
+eustock <- as.data.frame(EuStockMarkets)
+eustock <- eustock |> mutate(time = 1:n())
+ggplot(eustock, aes(x=time, y=DAX)) +
+  geom_line()
+```
+
+### wrong solution
+
+```{r}
+ggplot(eustock, aes(x=time, y=DAX)) +
+  geom_line() +
+  geom_line(mapping = aes(y = CAC, color="red"))
+```
+
+Problems: 1. y axis name is wrong 2. color must be specified manually 3. we miss association between colors and names
+
+### Tidyr based solutions
+```{r}
+long <- eustock |> pivot_longer(-time, names_to = "stock_index", values_to = "value")
+
+ggplot(long, aes(x=time, y=value, group=stock_index, color=stock_index))+geom_line()
+```
+```{r}
+ggplot(long, aes(x=time, y=value))+geom_line()+
+  facet_wrap(~stock_index, ncol = 1, scales = "free_y")
+```
+
