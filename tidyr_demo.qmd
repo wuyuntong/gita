@@ -17,7 +17,7 @@ library(dplyr)
 
 ### Multiple lines on a single graph
 
-```{r}
+```{r Dax stock}
 eustock <- as.data.frame(EuStockMarkets)
 eustock <- eustock |> mutate(time = 1:n())
 ggplot(eustock, aes(x = time, y = DAX)) +
